@@ -10,12 +10,10 @@ import com.bhuvancom.ecom.model.OrderStatus;
 import com.bhuvancom.ecom.service.OrderService;
 import com.bhuvancom.ecom.service.ProductService;
 import com.bhuvancom.ecom.service.UserService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

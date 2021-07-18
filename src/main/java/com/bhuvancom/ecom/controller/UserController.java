@@ -1,7 +1,6 @@
 package com.bhuvancom.ecom.controller;
 
 import com.bhuvancom.ecom.exception.EcomError;
-import com.bhuvancom.ecom.exception.MyApiExceptionHandler;
 import com.bhuvancom.ecom.exception.model.ErrorResponse;
 import com.bhuvancom.ecom.model.Order;
 import com.bhuvancom.ecom.model.User;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Created Using IntelliJ Idea
@@ -35,18 +33,19 @@ public class UserController {
         return new ResponseEntity<>(mUserService.upsertUser(user), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public List<Order> getThisUserOrders(@PathVariable(name = "id") int id) {
+    @GetMapping("/orders/{user_id}")
+    public List<Order> getThisUserOrders(@PathVariable(name = "user_id") int id) {
         return mUserService.findOrdersOfThisUser(id);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestParam(name = "email") String email,
-                                            @RequestParam(name = "password") String password) {
+    public ResponseEntity<User> loginUser(@RequestParam(name = "email") String email,
+                                          @RequestParam(name = "password") String password) {
         Optional<User> login = mUserService.login(email, password);
         if (login.isPresent()) {
             return new ResponseEntity<>(login.get(), HttpStatus.OK);
         }
-        throw new EcomError(new ErrorResponse(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), "Email or password is wrong"));
+        throw new EcomError(new ErrorResponse(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(),
+                "Email or password is wrong"));
     }
 }

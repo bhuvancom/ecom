@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +18,7 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private OrderService mOrderService;
+
 
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByUserEmail(email);
@@ -39,7 +38,8 @@ public class UserService {
     }
 
     public List<Order> findOrdersOfThisUser(int id) {
-        List<Order> orders = mOrderService.getOrderByUserId(id);
-        return orders;
+        return mOrderService.getOrderByUserId(id);
     }
+
+
 }
