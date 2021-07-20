@@ -3,8 +3,10 @@ package com.bhuvancom.ecom.controller;
 import com.bhuvancom.ecom.exception.EcomError;
 import com.bhuvancom.ecom.exception.MyApiExceptionHandler;
 import com.bhuvancom.ecom.exception.model.ErrorResponse;
+import com.bhuvancom.ecom.model.Cart;
 import com.bhuvancom.ecom.model.Order;
 import com.bhuvancom.ecom.model.User;
+import com.bhuvancom.ecom.service.CartService;
 import com.bhuvancom.ecom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +37,8 @@ public class UserController {
         return new ResponseEntity<>(mUserService.upsertUser(user), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public List<Order> getThisUserOrders(@PathVariable(name = "id") int id) {
+    @GetMapping("/orders/{user_id}")
+    public List<Order> getThisUserOrders(@PathVariable(name = "user_id") int id) {
         return mUserService.findOrdersOfThisUser(id);
     }
 
