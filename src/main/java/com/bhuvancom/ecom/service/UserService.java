@@ -4,6 +4,9 @@ import com.bhuvancom.ecom.model.Order;
 import com.bhuvancom.ecom.model.User;
 import com.bhuvancom.ecom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +41,8 @@ public class UserService {
         return Optional.empty();
     }
 
-    public List<Order> findOrdersOfThisUser(int id) {
-        List<Order> orders = mOrderService.getOrderByUserId(id);
-        return orders;
+    public Page<Order> findOrdersOfThisUser(int id, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 5);
+        return mOrderService.getOrderByUserId(id, pageable);
     }
 }

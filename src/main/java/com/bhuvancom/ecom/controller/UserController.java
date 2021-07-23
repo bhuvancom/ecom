@@ -9,6 +9,7 @@ import com.bhuvancom.ecom.model.User;
 import com.bhuvancom.ecom.service.CartService;
 import com.bhuvancom.ecom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created Using IntelliJ Idea
@@ -34,12 +37,24 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> upsertUser(@RequestBody User user) {
-        return new ResponseEntity<>(mUserService.upsertUser(user), HttpStatus.CREATED);
+        if (user.getUserEmail() == null || isEmailCorrect(user.getUserEmail())) {
+            throw new EcomError(new ErrorResponse(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), "Email address is not correct"));
+        } else {
+            return new ResponseEntity<>(mUserService.upsertUser(user), HttpStatus.CREATED);
+        }
+    }
+
+    private boolean isEmailCorrect(String userEmail) {
+        String regex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(userEmail);
+        return matcher.matches();
     }
 
     @GetMapping("/orders/{user_id}")
-    public List<Order> getThisUserOrders(@PathVariable(name = "user_id") int id) {
-        return mUserService.findOrdersOfThisUser(id);
+    public Page<Order> getThisUserOrders(@PathVariable(name = "user_id") int id,
+                                         @RequestParam(value = "page", defaultValue = "1") int page) {
+        return mUserService.findOrdersOfThisUser(id,page);
     }
 
     @PostMapping("/login")

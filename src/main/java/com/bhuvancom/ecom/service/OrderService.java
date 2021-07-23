@@ -5,6 +5,8 @@ import com.bhuvancom.ecom.model.OrderProduct;
 import com.bhuvancom.ecom.repository.OrderProductRepository;
 import com.bhuvancom.ecom.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,7 @@ public class OrderService {
         mOrderRespository.delete(orders);
     }
 
-    public List<Order> getOrderByUserId(int id) {
-        return mOrderRespository.findByUserId(id);
+    public Page<Order> getOrderByUserId(int id, Pageable pageable) {
+        return mOrderRespository.findByUserId(id,pageable);
     }
 }
