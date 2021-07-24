@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<User> update(@RequestBody User user,
                                        @RequestParam(value = "old_password", defaultValue = "") String oldPass) {
         Optional<User> login = mUserService.login(user.getUserEmail(), oldPass);
-        if (login.isEmpty()) {
+        if (!login.isPresent()) {
             throw new EcomError(new ErrorResponse(HttpStatus.BAD_REQUEST,
                     HttpStatus.BAD_REQUEST.value(),
                     "Please check your input"));
@@ -45,7 +45,7 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> upsertUser(@RequestBody User user) {
-        if (user.getUserEmail() == null || !isEmailCorrect(user.getUserEmail()) || user.getUserPassword().isBlank()) {
+        if (user.getUserEmail() == null || !isEmailCorrect(user.getUserEmail()) || user.getUserPassword().trim().isEmpty()) {
             throw new EcomError(new ErrorResponse(HttpStatus.BAD_REQUEST,
                     HttpStatus.BAD_REQUEST.value(), "Email address/password is not correct"));
         } else {
