@@ -1,20 +1,31 @@
 package com.bhuvancom.ecom;
 
+import com.bhuvancom.ecom.exception.EcomError;
+import com.bhuvancom.ecom.exception.model.ErrorResponse;
 import com.bhuvancom.ecom.model.Product;
 import com.bhuvancom.ecom.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Just adding this re-trigger
  */
 @SpringBootApplication
+@RestController
 public class EcomApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(EcomApplication.class.getName());
 
     public static void main(String[] args) {
         SpringApplication.run(EcomApplication.class, args);
+        logger.info("Starting............");
     }
 
     @Bean

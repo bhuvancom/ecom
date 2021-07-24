@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -28,6 +29,14 @@ public class MyApiExceptionHandler {
         return new ResponseEntity<>(e.getErrorResponse(), e.getErrorResponse().getStatus());
     }
 
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> handle(NoHandlerFoundException e) {
+        return new ResponseEntity<>(
+                new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        e.getRequestURL()+"Not Found"), HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handle(Exception e) {
