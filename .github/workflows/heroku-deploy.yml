@@ -40,7 +40,7 @@ jobs:
           HEROKU_EMAIL: ${{ secrets_HEROKU_EMAIL }}
       - name: Add Heroku remote
         run: heroku git:remote --app $HEROKU_APP_NAME_ECOM
-          env:
+        env:
           HEROKU_APP_NAME_ECOM: ${{ secrets.HEROKU_APP_NAME_ECOM }}
       - name: Push to heroku
         run: git push heroku master
