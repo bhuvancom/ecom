@@ -8,20 +8,20 @@ on:
     branches:
       - master
       - main
-    push:
-      paths:
-        - '**/**.java'
-        - '**.xml'
-        - '**/**.properties'
-      branches:
-        - master
-        - main
-    workflow_dispatch:
-      inputs:
-        Name:
-          description: 'Your Name'
-          required: true
-          default: 'Bhuvaneshvar'
+  push:
+    paths:
+      - '**/**.java'
+      - '**.xml'
+      - '**/**.properties'
+    branches:
+       - master
+       - main
+  workflow_dispatch:
+    inputs:
+       Name:
+         description: 'Your Name'
+         required: true
+         default: 'Bhuvaneshvar'
 
 
 jobs:
