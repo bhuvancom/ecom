@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    name: '${{DB_NAME}}'
+    driver-class-name: 'org.postgresql.Driver'
+    url: 'jdbc:postgresql://${{DB_URL}}:${{DB_PORT}}/${{DB_NAME}}?sslMode=require&user=${{DB_USER}}&password=${{DB_PASSWORD}}'
+    max-active: 10
+    max-idle: 5
+    min-idle: 2
+    initial-size: 2
+    remove-abandoned: true
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: 'org.hibernate.dialect.PostgreSQL95Dialect'
+  main:
+    log-startup-info: true
+  output:
+    ansi:
+      enabled: ALWAYS
+logging:
+  level:
+    root: error
+    sql: error
+    web: error
