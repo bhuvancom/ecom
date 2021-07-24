@@ -17,8 +17,9 @@ public class ProductController {
 
     @GetMapping(value = {"", "/"})
     public Page<Product> getProducts(@RequestParam(name = "page", defaultValue = "1") int page,
-                                     @RequestParam(name = "page_size", defaultValue = "5") int pageSize) {
-        return productService.getAllProduct(pageSize, page);
+                                     @RequestParam(name = "page_size", defaultValue = "5") int pageSize,
+                                     @RequestParam(name = "query", defaultValue = "") String query) {
+        return productService.getAllProduct(pageSize, page,query);
     }
 
 }

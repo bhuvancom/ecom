@@ -18,16 +18,18 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public Page<Product> getAllProduct(int pageSize, int page) {
+    public Page<Product> getAllProduct(int pageSize, int page, String query) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        return productRepository.findAll(pageable);
+        return productRepository.findByNameContainingIgnoreCase(query, pageable);
+        //return productRepository.findAll(pageable);
     }
 
     public Product getProduct(long id) {
         return productRepository
                 .findById(id)
                 .orElseThrow(() -> new EcomError(
-                        new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "Product Not found")));
+                        new ErrorResponse(HttpStatus.NOT_FOUND,
+                                HttpStatus.NOT_FOUND.value(), "Product Not found")));
     }
 
     public Product save(Product product) {
