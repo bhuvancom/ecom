@@ -1,7 +1,6 @@
 package com.bhuvancom.ecom.exception;
 
 import com.bhuvancom.ecom.exception.model.ErrorResponse;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,11 +28,6 @@ public class MyApiExceptionHandler {
         return new ResponseEntity<>(e.getErrorResponse(), e.getErrorResponse().getStatus());
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> hanlde() {
-        return new ResponseEntity<>(new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(),
-                "Ohho! This is wrong place"), HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handle(Exception e) {

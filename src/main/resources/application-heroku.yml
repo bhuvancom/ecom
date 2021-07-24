@@ -1,8 +1,8 @@
 spring:
   datasource:
-    name: '${{DB_NAME}}'
+    name: ${DB_NAME}
     driver-class-name: 'org.postgresql.Driver'
-    url: 'jdbc:postgresql://${{DB_URL}}:${{DB_PORT}}/${{DB_NAME}}?sslMode=require&user=${{DB_USER}}&password=${{DB_PASSWORD}}'
+    url: 'jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_NAME}?sslMode=require&user=${DB_USER}&password=${DB_PASSWORD}'
     max-active: 10
     max-idle: 5
     min-idle: 2
@@ -18,6 +18,9 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+  data:
+    rest:
+      detection-strategy: ANNOTATED
 logging:
   level:
     root: error

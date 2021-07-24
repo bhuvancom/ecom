@@ -1,9 +1,9 @@
 spring:
   datasource:
-    name: '${{DB_NAME}}'
+    name: ${DB_NAME}
     driver-class-name: 'com.mysql.cj.jdbc.Driver'
-    url: 'jdbc:mysql://${{DB_HOST}}:3306/ecom?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC'
-    username: '${{DB_USER}}'
+    url: 'jdbc:mysql://${DB_URL}:3306/ecom?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC'
+    username: '${DB_USER}'
     max-active: 10
     max-idle: 5
     min-idle: 2
