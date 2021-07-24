@@ -1,6 +1,6 @@
 name: heroku-deploy
 on:
-  pull:
+  pull_request:
     branches:
       - master
   push:
