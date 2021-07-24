@@ -19,13 +19,10 @@ import org.springframework.http.HttpStatus;
 public class ErrorPageConfig {
     @Bean
     public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
-        return new WebServerFactoryCustomizer<ConfigurableWebServerFactory>() {
-            @Override
-            public void customize(ConfigurableWebServerFactory factory) {
-                ErrorPage page404 = new ErrorPage(HttpStatus.NOT_FOUND, "/error/404");
-                ErrorPage page500 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/500");
-                factory.addErrorPages(page404, page500);
-            }
+        return factory -> {
+            ErrorPage page404 = new ErrorPage(HttpStatus.NOT_FOUND, "/error/404");
+            ErrorPage page500 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/500");
+            factory.addErrorPages(page404, page500);
         };
     }
 }
