@@ -1,5 +1,10 @@
-name: deploy
-on: push
+name: heroku-deploy
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    - main
 
 jobs:
   heroku-deploy:
