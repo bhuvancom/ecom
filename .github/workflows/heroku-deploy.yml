@@ -1,8 +1,6 @@
 name: heroku-deploy
 on:
   pull_request:
-    paths-ignore:
-      - '.github/*'
     paths:
       - '**.java'
       - '**.xml'
@@ -10,8 +8,6 @@ on:
     branches:
       - master
   push:
-    paths-ignore:
-      - '.github/*'
     paths:
       - '**.java'
       - '**.xml'
