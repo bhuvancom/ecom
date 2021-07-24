@@ -1,5 +1,7 @@
 name: Maven Build
-on: [push,pull]
+on:
+  - push
+  - pull
 jobs:
   build:
     runs-on: ubuntu-latest
