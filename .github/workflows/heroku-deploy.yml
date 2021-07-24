@@ -2,16 +2,16 @@ name: heroku-deploy
 on:
   pull_request:
     paths:
-      - '**.java'
+      - '**/**.java'
       - '**.xml'
-      - '**.properties'
+      - '**/**.properties'
     branches:
       - master
   push:
     paths:
-      - '**.java'
+      - '**/**.java'
       - '**.xml'
-      - '**.properties'
+      - '**/**.properties'
     branches:
       - main
 
