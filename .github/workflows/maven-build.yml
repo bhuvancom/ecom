@@ -16,6 +16,12 @@ on:
       branches:
         - master
         - main
+    workflow_dispatch:
+      inputs:
+        Name:
+          description: 'Your Name'
+          required: true
+          default: 'Bhuvaneshvar'
 
 
 jobs:

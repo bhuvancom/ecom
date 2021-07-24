@@ -16,6 +16,12 @@ on:
     branches:
       - main
       - master
+  workflow_dispatch:
+    inputs:
+      Name:
+        description: 'Your Name'
+        required: true
+        default: 'Bhuvaneshvar'
 
 jobs:
   heroku-deploy:
