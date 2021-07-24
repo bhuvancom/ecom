@@ -3,11 +3,19 @@ on:
   pull_request:
     paths-ignore:
       - '.github/*'
+    paths:
+      - '**.java'
+      - '**.xml'
+      - '**.properties'
     branches:
       - master
   push:
     paths-ignore:
       - '.github/*'
+    paths:
+      - '**.java'
+      - '**.xml'
+      - '**.properties'
     branches:
       - main
 
