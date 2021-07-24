@@ -7,6 +7,7 @@ on:
       - '**/**.properties'
     branches:
       - master
+      - main
   push:
     paths:
       - '**/**.java'
@@ -14,6 +15,7 @@ on:
       - '**/**.properties'
     branches:
       - main
+      - master
 
 jobs:
   heroku-deploy:
