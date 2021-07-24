@@ -2,16 +2,16 @@ name: Maven Build
 on:
   pull_request:
     paths:
-      - '**.java'
+      - '**/src/**.java'
       - '**.xml'
-      - '**.properties'
+      - '**/**.properties'
     branches:
       - master
     push:
       paths:
-        - '**.java'
+        - '**/**.java'
         - '**.xml'
-        - '**.properties'
+        - '**/**.properties'
       branches:
         - master
 
