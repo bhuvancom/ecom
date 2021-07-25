@@ -31,6 +31,7 @@ public class EcomApplication {
     @Bean
     CommandLineRunner runner(ProductService productService) {
         return args -> {
+
             productService.save(new Product(1L, "Samsung TV Set", 300.00, "https://encrypted-tbn0.gstatic" +
                     ".com/images?q=tbn:ANd9GcSHs_Q_HmDxOPprg7CJHWYf_qMf3qUtubTQ8nsSoC4FRdhsaT5ffg&s"));
             productService.save(new Product(2L, "Game Console", 200.00, "https://images-na.ssl-images-amazon" +
