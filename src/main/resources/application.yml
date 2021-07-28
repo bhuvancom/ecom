@@ -1,4 +1,10 @@
 spring:
+  application:
+    admin:
+      enabled: true
+  output:
+    ansi:
+      enabled: ALWAYS
   datasource:
     name: 'ecom'
   jpa:
@@ -13,3 +19,6 @@ logging:
     root: info
     sql: info
     web: debug
+
+stripe:
+  key: 'pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3'

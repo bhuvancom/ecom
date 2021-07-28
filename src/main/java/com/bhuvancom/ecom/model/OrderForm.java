@@ -1,10 +1,7 @@
 package com.bhuvancom.ecom.model;
 
 import com.bhuvancom.ecom.dto.OrderProductDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 @NoArgsConstructor
 public class OrderForm {
     private User user;

@@ -11,6 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +38,7 @@ public class UserController {
 
     @PostMapping("/update")
     public ResponseEntity<User> update(@RequestBody User user,
-                                       @RequestParam(value = "old_password", defaultValue = "") String oldPass) {
+                                       @RequestParam(value = "old_password", defaultValue = "") String oldPass) throws Exception {
         Optional<User> login = mUserService.login(user.getUserEmail(), oldPass);
         if (!login.isPresent()) {
             throw new EcomError(new ErrorResponse(HttpStatus.BAD_REQUEST,
@@ -44,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<User> upsertUser(@RequestBody User user) {
+    public ResponseEntity<User> upsertUser(@RequestBody User user) throws Exception {
         if (user.getUserEmail() == null || !isEmailCorrect(user.getUserEmail()) || user.getUserPassword().trim().isEmpty()) {
             throw new EcomError(new ErrorResponse(HttpStatus.BAD_REQUEST,
                     HttpStatus.BAD_REQUEST.value(), "Email address/password is not correct"));
@@ -68,7 +74,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> loginUser(@RequestParam(name = "email") String email,
-                                            @RequestParam(name = "password") String password) {
+                                            @RequestParam(name = "password") String password) throws Exception {
         Optional<User> login = mUserService.login(email, password);
         if (login.isPresent()) {
             return new ResponseEntity<>(login.get(), HttpStatus.OK);

@@ -9,8 +9,10 @@ spring:
     min-idle: 2
     initial-size: 2
     remove-abandoned: true
+
   jpa:
     show-sql: true
+    generate-ddl: true
     properties:
       hibernate:
         dialect: 'org.hibernate.dialect.MySQL8Dialect'
@@ -26,3 +28,5 @@ logging:
     root: info
     sql: info
     web: info
+stripe:
+  key: '${STRIPE_KEY}'

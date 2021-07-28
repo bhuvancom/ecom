@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created Using IntelliJ Idea
  *
@@ -32,7 +34,9 @@ public class ErrorPageCondtoller implements ErrorController {
     }
 
     @RequestMapping("/404")
-    public void toPage404() {
+    public void toPage404(HttpServletRequest request) {
+        LOGGER.error("ERROR 404 method {} uri {}, query {}, remote {}, host {}, param {}, context {}", request.getMethod(),
+                request.getRequestURI(), request.getQueryString(), request.getRemoteUser(), request.getRemoteHost(), request.getParameterMap().toString(), request.getContextPath());
         throw new EcomError(new ErrorResponse(HttpStatus.NOT_FOUND,
                 HttpStatus.NOT_FOUND.value(),
                 "This end point is not found"));

@@ -22,6 +22,7 @@ import java.util.Set;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Order {
 
     @Id

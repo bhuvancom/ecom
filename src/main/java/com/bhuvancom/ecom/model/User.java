@@ -21,9 +21,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Email(regexp = ".*@.*\\..*", message = "Email should be valid")
+    @Column(unique = true, nullable = false)
     private String userEmail;
-
+    @Column(nullable = false)
+    private String userName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
     private String userPassword;
+    @Column(nullable = false)
     private String address;
 }

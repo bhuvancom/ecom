@@ -23,6 +23,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class CartItems implements Serializable {
     @EmbeddedId
     @JsonIgnore

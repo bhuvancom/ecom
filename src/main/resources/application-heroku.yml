@@ -10,6 +10,7 @@ spring:
     remove-abandoned: true
   jpa:
     show-sql: false
+    generate-ddl: true
     properties:
       hibernate:
         dialect: 'org.hibernate.dialect.PostgreSQL95Dialect'
@@ -26,3 +27,5 @@ logging:
     root: error
     sql: error
     web: error
+stripe:
+  key: '${STRIPE_KEY}'

@@ -41,7 +41,7 @@ public class CartController {
             return new ResponseEntity<>(thisUserIdCart.get(), HttpStatus.OK);
         }
         throw new EcomError(new ErrorResponse(HttpStatus.NOT_FOUND,
-                HttpStatus.NOT_FOUND.value(), "Hey New User, please start adding product and get back again to see your cart."));
+                HttpStatus.NOT_FOUND.value(), "Hey User,You haven't added any product till now."));
     }
 
     @PostMapping()

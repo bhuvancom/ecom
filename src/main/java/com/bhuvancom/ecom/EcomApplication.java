@@ -1,7 +1,5 @@
 package com.bhuvancom.ecom;
 
-import com.bhuvancom.ecom.exception.EcomError;
-import com.bhuvancom.ecom.exception.model.ErrorResponse;
 import com.bhuvancom.ecom.model.Product;
 import com.bhuvancom.ecom.service.ProductService;
 import org.slf4j.Logger;
@@ -10,8 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**

@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+@ToString
 public class Product implements Serializable {
 
     @Id
