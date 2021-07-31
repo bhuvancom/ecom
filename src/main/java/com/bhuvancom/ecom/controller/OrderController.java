@@ -4,6 +4,7 @@ import com.bhuvancom.ecom.dto.OrderProductDto;
 import com.bhuvancom.ecom.exception.EcomError;
 import com.bhuvancom.ecom.exception.model.ErrorResponse;
 import com.bhuvancom.ecom.model.*;
+import com.bhuvancom.ecom.service.CartService;
 import com.bhuvancom.ecom.service.OrderService;
 import com.bhuvancom.ecom.service.ProductService;
 import com.bhuvancom.ecom.service.UserService;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,29 +44,49 @@ public class OrderController {
     private ProductService productService;
 
     @Autowired
+    CartService cartService;
+
+    @Autowired
     private UserService userService;
 
     @Value("${stripe.key}")
     String stripeKey;
 
     @PostMapping("/payment")
+    @ResponseBody
     public Payment acceptPaymnet(HttpServletRequest request,
-                                 HttpServletResponse response, @RequestBody OrderForm of) {
+                                 HttpServletResponse response, @RequestBody User userBody) {
         LOGGER.info("entering payment");
         //if(1!=2)return  null;
-        Optional<User> user = userService.findUserById(of.getUser().getId());
+        Optional<User> user = userService.findUserById(userBody.getId());
         if (!user.isPresent()) {
-            LOGGER.info("user not found {} ", of.getUser());
+            LOGGER.info("user not found {} ", userBody);
             throw new EcomError(new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "User not found"));
         }
+
+        Optional<Cart> thisUserIdCart = cartService.getThisUserIdCart(user.get().getId());
+        if (!thisUserIdCart.isPresent()) {
+            throw new EcomError(new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(),
+                    "Cart step bypassed"));
+        }
+
         response.setContentType("application/json");
         try {
-            List<OrderProductDto> productOrders = of.getProductOrders();
+            List<OrderProductDto> collect = thisUserIdCart.get().getCartItems().stream().map(cartItem -> {
+                OrderProductDto dto = new OrderProductDto();
+                dto.setProduct(cartItem.getProduct());
+                dto.setQuantity(cartItem.getQuantity());
+                return dto;
+            }).collect(Collectors.toList());
+
             LOGGER.info("entering payment going to map price");
-            validateIfProductsExists(productOrders);
-            double sum = productOrders.stream().peek(orderProductDto ->
-                    LOGGER.info("product {}", orderProductDto)).mapToDouble(orderProductDto -> {
-                LOGGER.info("calculating {} , qty {}", orderProductDto.getProduct().getPrice(), orderProductDto.getQuantity());
+            validateIfProductsExists(collect);
+            double sum = collect.stream().peek(orderProductDto -> {
+                LOGGER.info("collect {}", orderProductDto);
+            }).mapToDouble(orderProductDto -> {
+                LOGGER.info("calculating {} , qty {}", orderProductDto.getProduct().getPrice(),
+                        orderProductDto.getQuantity());
+
                 return orderProductDto.getProduct().getPrice() * orderProductDto.getQuantity();
             }).sum();
             User userr = user.get();
@@ -74,7 +96,6 @@ public class OrderController {
             Stripe.apiKey = stripeKey;
             CustomerCreateParams ccp = CustomerCreateParams.builder()
                     .setEmail(userr.getUserEmail())
-                    //add api key here some where
                     .build();
             Customer customer = Customer.create(ccp);
             LOGGER.info("Customer set to {}", customer);
@@ -97,6 +118,9 @@ public class OrderController {
             payment.setEphemeralKey(ek.getSecret());
             payment.setPaymentIntent(paymentIntent.getClientSecret());
 
+            thisUserIdCart.get().setPaymentId(payment.getEphemeralKey());
+            cartService.upsertCart(thisUserIdCart.get());
+
             return payment;
 
         } catch (StripeException e) {
@@ -109,12 +133,43 @@ public class OrderController {
 
     }
 
+    /**
+     * This method will convert cart into order based on previous payment.
+     *
+     * @param orderForm the order form, its needed that key is sent with this
+     * @return Order updated order
+     */
     @PostMapping()
     public ResponseEntity<Order> upsertOrder(@RequestBody OrderForm orderForm) {
-        List<OrderProductDto> productOrders = orderForm.getProductOrders();
+        Optional<User> user = userService.findUserById(orderForm.getUser().getId());
+        if (!user.isPresent()) {
+            LOGGER.info("user not found {} ", orderForm.getUser());
+            throw new EcomError(new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(),
+                    "User not found"));
+        }
+
+        Optional<Cart> thisUserIdCart = cartService.getThisUserIdCart(user.get().getId());
+        if (!thisUserIdCart.isPresent()) {
+            throw new EcomError(new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(),
+                    "Cart step bypassed"));
+        }
+        List<OrderProductDto> productOrders = thisUserIdCart.get().getCartItems().stream().map(cartItem -> {
+            OrderProductDto dto = new OrderProductDto();
+            dto.setProduct(cartItem.getProduct());
+            dto.setQuantity(cartItem.getQuantity());
+            return dto;
+        }).collect(Collectors.toList());
+
         validateIfProductsExists(productOrders);
         Order order = new Order();
-        order.setUser(orderForm.getUser());
+        order.setUser(user.get());
+
+        if (!thisUserIdCart.get().getPaymentId().equals(orderForm.getPaymentId())) {
+            throw new EcomError(new ErrorResponse(HttpStatus.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Payment id did not match"));
+        }
+
         order.setStatus(OrderStatus.PAID.name());
         order = mOrderService.upsertOrder(order);
         List<OrderProduct> orderProducts = new ArrayList<>();
@@ -125,11 +180,13 @@ public class OrderController {
             );
             orderProducts.add(mOrderService.upsertOrderProduct(orderProduct));
         }
-
+        order.setPaymentId(thisUserIdCart.get().getPaymentId());
         order.setOrderProducts(orderProducts);
         mOrderService.upsertOrder(order);
-        //Order order1 = mOrderService.upsertOrder(order);
-        //return new ResponseEntity<>(order1, HttpStatus.CREATED);
+        cartService.cleanCartItemOfThisCartId(thisUserIdCart.get().getId());
+        thisUserIdCart.get().setPaymentId(null);
+        cartService.upsertCart(thisUserIdCart.get());
+
         String uri = ServletUriComponentsBuilder
                 .fromCurrentServletMapping()
                 .path("/orders/{id}")

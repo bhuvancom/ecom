@@ -34,6 +34,7 @@ public class Order {
     private LocalDate dateCreated;
 
     private String status;
+    private String paymentId;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "pk.order")

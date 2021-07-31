@@ -33,6 +33,8 @@ public class Cart {
     @JoinColumn(name = "user_id", unique = true, updatable = false)
     private User user;
 
+    private String paymentId;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "pk.cart", cascade = CascadeType.ALL)
     @Valid
